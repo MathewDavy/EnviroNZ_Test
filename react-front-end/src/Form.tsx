@@ -20,12 +20,13 @@ const Button = styled.button`
   width: 200px;
   margin: 0 auto;
 `;
-
+const Suburb = styled.div``;
 export const Form = () => {
   useEffect(() => {}, []);
 
   const [longitude, setLongitude] = useState();
   const [latitude, setLatitude] = useState();
+  const [suburb, setSuburb] = useState("");
 
   const handleLongitudeChange = (event: { target: { value: any } }) => {
     setLongitude(event.target.value);
@@ -34,9 +35,14 @@ export const Form = () => {
     setLatitude(event.target.value);
   };
 
-  const handleSubmit = (event: { preventDefault: () => void }) => {
+  const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
-    console.log(longitude);
+
+    const response = await fetch(
+      `suburbs/?longtitude=${longitude}&latitude=${latitude}`
+    );
+    const data = await response.json();
+    setSuburb(data);
   };
 
   return (
@@ -63,6 +69,8 @@ export const Form = () => {
         />
       </InputContainer>
       <Button type="submit">Submit</Button>
+
+      {suburb !== "" && <Suburb>Closest suburb: {suburb}</Suburb>}
     </StyledForm>
   );
 };
